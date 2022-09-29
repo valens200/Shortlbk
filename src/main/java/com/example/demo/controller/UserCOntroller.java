@@ -71,7 +71,7 @@ public class UserCOntroller {
     public void redirect(@PathVariable String shortUrl, HttpServletRequest request , HttpServletResponse response) throws IOException {
         log.info("url {}", request.getServletPath());
         Map<String, String> messages = new HashMap<>();
-            String  link ="http://localhost:8080" + request.getServletPath();
+            String  link ="https://bitly-backend.herokuapp.com/" + request.getServletPath();
             log.info("link {}", link);
             Url currentUrl = urlService.getUrlByHashedUrl(link);
             if(currentUrl == null){
