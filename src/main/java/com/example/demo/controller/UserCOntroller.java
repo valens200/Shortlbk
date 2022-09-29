@@ -93,7 +93,7 @@ public class UserCOntroller {
                 new ObjectMapper().writeValue(response.getOutputStream(), messages);
                 return null;
             }else{
-                String link = "http://localhost:8080/shortUrl/";
+                String link = "https://bitly-backend.herokuapp.com/";
                 LocalDateTime time = LocalDateTime.now();
                 url.setHashedUrl( link.concat(Hashing.murmur3_32().hashString(url.getOriginalUrl().concat(time.toString()), StandardCharsets.UTF_8).toString()));
                 response.setStatus(200);
