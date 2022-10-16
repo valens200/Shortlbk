@@ -1,5 +1,6 @@
 package com.example.demo.controller;
 
+import com.example.demo.models.Message;
 import com.example.demo.models.Url;
 import com.example.demo.service.UrlService;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -8,7 +9,6 @@ import com.google.common.hash.Hashing;
 
 import lombok.extern.java.Log;
 import lombok.extern.slf4j.Slf4j;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
@@ -20,12 +20,12 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.client.HttpClientErrorException.BadRequest;
-
+import javax.mail.MessagingException;
 import javax.mail.internet.MimeMessage;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 import java.nio.charset.StandardCharsets;
 import java.time.LocalDateTime;
 import java.util.HashMap;
@@ -35,43 +35,22 @@ import java.util.Map;
 @CrossOrigin("*")
 @Slf4j
 public class UserCOntroller {
-    @Autowired
-     JavaMailSender javaMailSender;
 
     @Autowired
     UrlService urlService;
+    @Autowired
+    JavaMailSender javaMailSender;
     @GetMapping("/")
 
     public  String greeting() {
         return "hello valens";
     }
-
-
-    @PostMapping("/sendMeEmail/{email}")
-
-    public String sendEMail(@PathVariable String email, HttpServletRequest request, HttpServletResponse response) throws IOException {
-        Map<String, String> messages = new HashMap<>();
-
-        if(email == null || email == ""){
-            messages.put("message ", "please enter an email ");
-            new ObjectMapper().writeValue(response.getOutputStream(), messages);
-            return "invalid inputs";
-        }else{
-            SimpleMailMessage message = new SimpleMailMessage();
-            message.setFrom("uwavalens2003@gmail.com");
-            message.setTo(email);
-            message.setText("<html><body><h1>" +
-                    "hello world</h1></body></html>");
-            message.setSubject("getting started with springboot");
-            javaMailSender.send(message);
-            return "message sent successfull";
-        }
-    }
     @GetMapping("/shortUrl/{shortUrl}")
     public void redirect(@PathVariable String shortUrl, HttpServletRequest request , HttpServletResponse response) throws IOException {
         log.info("url {}", request.getServletPath());
         Map<String, String> messages = new HashMap<>();
-            String  link ="https://bitly-backend.herokuapp.com/" + request.getServletPath();
+            String  link ="http://localhost:8080" + request.getServletPath();
+            log.info("link  {}", link);
             log.info("link {}", link);
             Url currentUrl = urlService.getUrlByHashedUrl(link);
             if(currentUrl == null){
@@ -93,7 +72,7 @@ public class UserCOntroller {
                 new ObjectMapper().writeValue(response.getOutputStream(), messages);
                 return null;
             }else{
-                String link = "https://bitly-backend.herokuapp.com/";
+                String link = "http://localhost:8080/shortUrl/";
                 LocalDateTime time = LocalDateTime.now();
                 url.setHashedUrl( link.concat(Hashing.murmur3_32().hashString(url.getOriginalUrl().concat(time.toString()), StandardCharsets.UTF_8).toString()));
                 response.setStatus(200);
@@ -104,4 +83,30 @@ public class UserCOntroller {
             return null;
         }
     }
+    @PostMapping("/send/{email}")
+    public String sendMessage(@PathVariable String email, @RequestBody Message message) throws MessagingException, UnsupportedEncodingException {
+        try{
+            String[] inputs = { email, message.getName(), message.getMessage() };
+            for( int i = 0; i < inputs.length; i++){
+                if(inputs[i] == null || inputs[i] == ""){
+                    return "Invalid inputs plese fillout all the fields";
+                }
+            }
+
+            String to = email;
+            String from = "uwavalens2003@gmail.com";
+            String content = message.getMessage();
+            MimeMessage message1 = javaMailSender.createMimeMessage();
+            MimeMessageHelper mimeMessageHelper = new MimeMessageHelper(message1);
+            mimeMessageHelper.setFrom(from, "valens niyonsenga");
+            mimeMessageHelper.setTo(to);
+            mimeMessageHelper.setText(content, true);
+            javaMailSender.send(message1);
+        }catch(Exception exception){
+            log.error("error {}", exception.getMessage());
+        }
+
+        return "message sent successfully";
+    }
+
 }
