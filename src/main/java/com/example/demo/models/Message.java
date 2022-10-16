@@ -10,6 +10,7 @@ import lombok.extern.slf4j.Slf4j;
 @NoArgsConstructor
 @AllArgsConstructor
 @Slf4j
+
 public class Message {
     private String name;
     private String message;

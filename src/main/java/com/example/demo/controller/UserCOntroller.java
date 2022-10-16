@@ -43,7 +43,7 @@ public class UserCOntroller {
     @GetMapping("/")
 
     public  String greeting() {
-        return "hello valens";
+        return "hello user wellcome";
     }
     @GetMapping("/shortUrl/{shortUrl}")
     public void redirect(@PathVariable String shortUrl, HttpServletRequest request , HttpServletResponse response) throws IOException {
