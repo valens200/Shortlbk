@@ -41,7 +41,6 @@ public class UserCOntroller {
     @Autowired
     JavaMailSender javaMailSender;
     @GetMapping("/")
-
     public  String greeting() {
         return "hello user wellcome";
     }
@@ -49,7 +48,7 @@ public class UserCOntroller {
     public void redirect(@PathVariable String shortUrl, HttpServletRequest request , HttpServletResponse response) throws IOException {
         log.info("url {}", request.getServletPath());
         Map<String, String> messages = new HashMap<>();
-            String  link ="http://localhost:8080" + request.getServletPath();
+            String  link ="https://short-url-ly.herokuapp.com/" + request.getServletPath();
             log.info("link  {}", link);
             log.info("link {}", link);
             Url currentUrl = urlService.getUrlByHashedUrl(link);
@@ -72,7 +71,7 @@ public class UserCOntroller {
                 new ObjectMapper().writeValue(response.getOutputStream(), messages);
                 return null;
             }else{
-                String link = "http://localhost:8080/shortUrl/";
+                String link = "https://short-url-ly.herokuapp.com/shortUrl/";
                 LocalDateTime time = LocalDateTime.now();
                 url.setHashedUrl( link.concat(Hashing.murmur3_32().hashString(url.getOriginalUrl().concat(time.toString()), StandardCharsets.UTF_8).toString()));
                 response.setStatus(200);
