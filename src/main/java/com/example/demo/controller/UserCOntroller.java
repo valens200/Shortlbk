@@ -100,6 +100,7 @@ public class UserCOntroller {
             mimeMessageHelper.setFrom(from, "valens niyonsenga");
             mimeMessageHelper.setTo(to);
             mimeMessageHelper.setText(content, true);
+            mimeMessageHelper.setSubject("Idea on shortly");
             javaMailSender.send(message1);
         }catch(Exception exception){
             log.error("error {}", exception.getMessage());
