@@ -65,7 +65,7 @@ public class UserCOntroller {
 //            log.info("link {}", link);
             Url currentUrl = urlService.getUrlByHashedUrl(link);
             if(currentUrl == null){
-                messages.put("message", link);
+                messages.put("message", currentUrl.getHashedUrl());
                 new ObjectMapper().writeValue(response.getOutputStream(), messages);
                 log.info("urlll ");
             }else{
