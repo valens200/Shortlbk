@@ -60,7 +60,7 @@ public class UserCOntroller {
     @GetMapping("/shortUrl/{shortUrl}")
     public void redirect(@PathVariable String shortUrl, HttpServletRequest request , HttpServletResponse response) throws IOException {
         Map<String, String> messages = new HashMap<>();
-            String  link ="https://vshortly.herokuapp.com" + request.getServletPath();
+            String  link ="http://localhost:8080" + request.getServletPath();
 //            log.info("link  {}", link);
 //            log.info("link {}", link);
             Url currentUrl = urlService.getUrlByHashedUrl(link);
@@ -84,11 +84,11 @@ public class UserCOntroller {
                 new ObjectMapper().writeValue(response.getOutputStream(), messages);
                 return null;
             }else{
-                String link = "https://vshortly.herokuapp.com/shortUrl/";
+                String link = "http://localhost:8080/shortUrl/";
                 LocalDateTime time = LocalDateTime.now();
 //                UUID uuid
 
-                url.setHashedUrl( link.concat(Hashing.goodFastHash(1).hashString(url.getOriginalUrl().substring(url.getOriginalUrl().length()-2).concat(time.toString()), StandardCharsets.UTF_8).toString()).substring(8));
+                url.setHashedUrl( link.concat(Hashing.goodFastHash(1).hashString(url.getOriginalUrl().substring(url.getOriginalUrl().length()-2).concat(time.toString()), StandardCharsets.UTF_8).toString()));
                 response.setStatus(200);
                 return  urlService.registerUrl(url);
             }
