@@ -19,7 +19,6 @@ public class DemoApplication {
 			public void addCorsMappings(CorsRegistry registry) {
 				registry.addMapping("/**")
 						.allowedOrigins("https://vshort.vercel.app")
-
 						.allowedOriginPatterns("*")
 						.allowedMethods("POST", "PUT", "DELETE", "PUT", "PROPFIND")
 						.allowCredentials(false);

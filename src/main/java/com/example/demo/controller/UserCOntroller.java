@@ -28,9 +28,11 @@ import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
+import java.rmi.server.UID;
 import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.UUID;
 
 @RestController
 @CrossOrigin("*")
@@ -84,7 +86,9 @@ public class UserCOntroller {
             }else{
                 String link = "https://vshortly.herokuapp.com/shortUrl/";
                 LocalDateTime time = LocalDateTime.now();
-                url.setHashedUrl( link.concat(Hashing.murmur3_32().hashString(url.getOriginalUrl().concat(time.toString()), StandardCharsets.UTF_8).toString()));
+//                UUID uuid
+
+                url.setHashedUrl( link.concat(Hashing.goodFastHash(1).hashString(url.getOriginalUrl().substring(url.getOriginalUrl().length()-2).concat(time.toString()), StandardCharsets.UTF_8).toString()).substring(8));
                 response.setStatus(200);
                 return  urlService.registerUrl(url);
             }
