@@ -60,7 +60,7 @@ public class UserCOntroller {
     @GetMapping("/shortUrl/{shortUrl}")
     public void redirect(@PathVariable String shortUrl, HttpServletRequest request , HttpServletResponse response) throws IOException {
         Map<String, String> messages = new HashMap<>();
-            String  link ="http://localhost:8080" + request.getServletPath();
+            String  link ="https://vshortly.herokuapp.com" + request.getServletPath();
 //            log.info("link  {}", link);
 //            log.info("link {}", link);
             Url currentUrl = urlService.getUrlByHashedUrl(link);
