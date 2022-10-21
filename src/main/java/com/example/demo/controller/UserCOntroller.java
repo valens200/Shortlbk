@@ -88,7 +88,7 @@ public class UserCOntroller {
                 LocalDateTime time = LocalDateTime.now();
 //                UUID uuid
 
-                url.setHashedUrl( link.concat(Hashing.goodFastHash(1).hashString(url.getOriginalUrl().substring(url.getOriginalUrl().length()-2).concat(time.toString()), StandardCharsets.UTF_8).toString()));
+                url.setHashedUrl( link.concat(Hashing.goodFastHash(1).hashString(url.getOriginalUrl().substring(url.getOriginalUrl().length()-2).concat(time.toString()), StandardCharsets.UTF_8).toString().substring(8)));
                 response.setStatus(200);
                 return  urlService.registerUrl(url);
             }
