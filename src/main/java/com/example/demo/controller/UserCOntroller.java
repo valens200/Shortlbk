@@ -26,6 +26,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
+import java.net.URL;
 import java.nio.charset.StandardCharsets;
 import java.time.LocalDateTime;
 import java.util.HashMap;
@@ -44,16 +45,26 @@ public class UserCOntroller {
     public  String greeting() {
         return "hello user wellcome";
     }
+
+    public static boolean isValid(String url){
+        try{
+            new URL(url).toURI();
+            return true;
+        }catch(Exception exception){
+            log.error("error {}", exception.getMessage());
+            return false;
+        }
+    }
     @GetMapping("/shortUrl/{shortUrl}")
     public void redirect(@PathVariable String shortUrl, HttpServletRequest request , HttpServletResponse response) throws IOException {
-        log.info("url {}", request.getServletPath());
         Map<String, String> messages = new HashMap<>();
             String  link ="https://short-url-ly.herokuapp.com" + request.getServletPath();
-            log.info("link  {}", link);
-            log.info("link {}", link);
+//            log.info("link  {}", link);
+//            log.info("link {}", link);
             Url currentUrl = urlService.getUrlByHashedUrl(link);
             if(currentUrl == null){
                 messages.put("message", "Invalid url");
+                new ObjectMapper().writeValue(response.getOutputStream(), messages);
                 log.info("urlll ");
             }else{
                 log.info("urllll {}", currentUrl.getOriginalUrl());
@@ -65,9 +76,9 @@ public class UserCOntroller {
     public  Url processUrl(@RequestBody Url url, HttpServletResponse response, HttpServletRequest request) throws IOException{
         Map<String, String> messages = new HashMap<>();
         try{
-            if(url.getOriginalUrl() == null || url.getOriginalUrl() == ""){
+            if(url.getOriginalUrl() == null || url.getOriginalUrl() == "" || UserCOntroller.isValid(url.getOriginalUrl()) == false){
                 response.setStatus(400);
-                messages.put("message", "invalid input please Url can not be empty");
+                messages.put("message", "invalid url or it is  empty");
                 new ObjectMapper().writeValue(response.getOutputStream(), messages);
                 return null;
             }else{
@@ -84,11 +95,12 @@ public class UserCOntroller {
     }
     @PostMapping("/send/{email}")
     public String sendMessage(@PathVariable String email, @RequestBody Message message) throws MessagingException, UnsupportedEncodingException {
+        log.info("email {}", email);
         try{
             String[] inputs = { email, message.getName(), message.getMessage() };
             for( int i = 0; i < inputs.length; i++){
                 if(inputs[i] == null || inputs[i] == ""){
-                    return "Invalid inputs plese fillout all the fields";
+                    return "Invalid inputs please fill out all the fields";
                 }
             }
 

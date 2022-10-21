@@ -21,6 +21,7 @@ public class DemoApplication {
 						.allowedOriginPatterns("*")
 						.allowedMethods("POST", "PUT", "DELETE", "PUT", "PROPFIND")
 						.allowCredentials(false);
+
 			}
 		};
 
