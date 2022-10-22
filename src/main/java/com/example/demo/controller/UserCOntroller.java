@@ -84,7 +84,7 @@ public class UserCOntroller {
                 new ObjectMapper().writeValue(response.getOutputStream(), messages);
                 return null;
             }else{
-                String link = "https://vshortl.herokuapp.com";
+                String link = "https://vshortl.herokuapp.com/";
                 LocalDateTime time = LocalDateTime.now();
 //                UUID uuid
 
