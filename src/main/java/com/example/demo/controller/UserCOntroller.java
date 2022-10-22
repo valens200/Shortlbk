@@ -57,7 +57,7 @@ public class UserCOntroller {
             return false;
         }
     }
-    @GetMapping("/shortUrl/{shortUrl}")
+    @GetMapping("/s/{shortUrl}")
     public void redirect(@PathVariable String shortUrl, HttpServletRequest request , HttpServletResponse response) throws IOException {
         Map<String, String> messages = new HashMap<>();
             String  link ="https://vshortly.herokuapp.com" + request.getServletPath();
@@ -84,7 +84,7 @@ public class UserCOntroller {
                 new ObjectMapper().writeValue(response.getOutputStream(), messages);
                 return null;
             }else{
-                String link = "https://vshortly.herokuapp.com/shortUrl/";
+                String link = "https://vshortly.herokuapp.com/s/";
                 LocalDateTime time = LocalDateTime.now();
 //                UUID uuid
 
